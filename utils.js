@@ -98,20 +98,17 @@ const calculateOrderAmount = async (items) => {
   items.forEach((i) => ids.push(i.item_reference_id));
 
   // 1. Get all cart products
-  const {
-    data: { allProduct, allSettings },
-    errors,
-  } = await graphql.request(GET_PRODUCTS, { items: ids });
+  const query = await graphql.request(GET_PRODUCTS, { items: ids });
 
-  console.log(errors)
-  if (errors !== null) {
-    console.log(errors)
+  console.log(query)
+  if (query.errors !== null) {
+    console.log(query.errors)
     throw new Error("Failed to get references");
   }
 
-  console.log(allProduct);
+  console.log(query.data.allProduct);
   // 2. Validate Products
-  if (allProduct.length === 0) {
+  if (query.data.allProduct.length === 0) {
     throw new Error("No Products");
   }
 
@@ -128,8 +125,8 @@ const calculateOrderAmount = async (items) => {
   //*
   let subTotal = 0;
 
-  if (allProduct.length === items.length) {
-    allProduct.forEach((p) => {
+  if (query.data.allProduct.length === items.length) {
+    query.data.allProduct.forEach((p) => {
       //! TODO validate that options are in fact a valid choice from CMS
       // compare each item to the equivalent product and be sure the option exists
       const eqItems = items.filter((i) => i.item_reference_id === p._id);
