@@ -51,10 +51,7 @@ mutation ($intent_id: String, $user_id: uuid, $total: Int, $type: order_type_enu
 const createOrder = async (items, user_id, type, intent, subtotal, total) => {
 
   if (intent === null) {
-    const {
-      insert_order_one,
-      errors,
-    } = await graphql.request(CREATE_ORDER, {
+    const orderQuery = await graphql.request(CREATE_ORDER, {
       user_id,
       type,
       intent,
@@ -63,18 +60,15 @@ const createOrder = async (items, user_id, type, intent, subtotal, total) => {
       subtotal,
     });
 
-    console.log(insert_order_one);
+    console.log(orderQuery.insert_order_one);
 
-    if (errors !== undefined) {
-      console.log(errors);
+    if (orderQuery.errors !== undefined) {
+      console.log(orderQuery.errors);
       throw new Error("Failed to create order");
     }
-    return { ...insert_order_one };
+    return { ...orderQuery.insert_order_one };
   } else {
-    const {
-      data,
-      errors,
-    } = await graphql.request(CREATE_ORDER, {
+    const orderQuery = await graphql.request(CREATE_ORDER, {
       user_id,
       type,
       intent_id: intent.id,
@@ -83,13 +77,13 @@ const createOrder = async (items, user_id, type, intent, subtotal, total) => {
       subtotal,
     });
 
-    console.log(insert_order_one);
+    console.log(orderQuery.insert_order_one);
 
-    if (errors !== undefined) {
-      console.log(errors);
+    if (orderQuery.errors !== undefined) {
+      console.log(orderQuery.errors);
       throw new Error("Failed to create order");
     }
-    return { ...insert_order_one };
+    return { ...orderQuery.insert_order_one };
   }
 };
 
