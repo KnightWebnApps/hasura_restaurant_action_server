@@ -121,27 +121,22 @@ const calculateOrderAmount = async (items) => {
   //*
   let subtotal = 0;
 
-  if (query.allProduct.length === items.length) {
-    query.allProduct.forEach((p) => {
-      //! TODO validate that options are in fact a valid choice from CMS
-      // compare each item to the equivalent product and be sure the option exists
-      const eqItems = items.filter((i) => i.item_reference_id === p._id && i.price === p.price);
+  query.allProduct.forEach((p) => {
+    //! TODO validate that options are in fact a valid choice from CMS
+    // compare each item to the equivalent product and be sure the option exists
+    const eqItems = items.filter((i) => i.item_reference_id === p._id && i.price === p.price);
 
-      if (eqItems === null || eqItems.length === 0) {
-        throw new error("Invalid Item reference");
-      }
+    if (eqItems === null || eqItems.length === 0) {
+      throw new error("Invalid Item reference");
+    }
 
-      //* Could be same item with different options ** handle multiple items
-      if (eqItems.length > 1) {
-        eqItems.forEach((i) => (subtotal += p.price * i.quantity));
-      } else {
-        subtotal += p.price * eqItems[0].quantity;
-      }
-    });
-  } else {
-    const n = items.length - query.allProduct.length;
-    throw new Error(`ID mismatch for ${n} product(s)`);
-  }
+    //* Could be same item with different options ** handle multiple items
+    if (eqItems.length > 1) {
+      eqItems.forEach((i) => (subtotal += p.price * i.quantity));
+    } else {
+      subtotal += p.price * eqItems[0].quantity;
+    }
+  });
 
   // 3. Sum items and add tax
   const tax = subtotal * query.allSettings[0].taxRate;
