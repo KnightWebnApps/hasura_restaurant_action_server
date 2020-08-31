@@ -94,11 +94,14 @@ const createOrder = async (items, user_id, type, intent_id, subtotal, total) => 
 const calculateOrderAmount = async (items) => {
   console.log(items);
 
+  const ids = [];
+  items.forEach((i) => ids.push(i.item_reference_id));
+
   // 1. Get all cart products
   const {
     data: { allProduct, allSettings },
     errors,
-  } = await graphql.request(GET_PRODUCTS, { items });
+  } = await graphql.request(GET_PRODUCTS, { items: ids });
 
   if (!errors) {
     throw new Error("Failed to get references");
@@ -152,4 +155,4 @@ const calculateOrderAmount = async (items) => {
   return { total, subtotal };
 };
 
-module.exports = { calculateOrderAmount };
+module.exports = { calculateOrderAmount, createOrder };
