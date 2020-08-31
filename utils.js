@@ -77,7 +77,7 @@ const createOrder = async (items, user_id, type, intent_id, subtotal, total) => 
     } = await graphql.request(CREATE_ORDER, {
       user_id,
       type,
-      intent_id = intent_id.client_secret,
+      intent_id: intent_id.client_secret,
       total,
       items,
       subtotal,
