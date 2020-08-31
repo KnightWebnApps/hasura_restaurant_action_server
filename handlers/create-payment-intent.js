@@ -7,7 +7,7 @@ module.exports = createStripePaymentIntent = async (req, res) => {
 
   const user_id = req.body.session_variables["x-hasura-user-id"];
   // Create a PaymentIntent with the order amount and currency
-  const { total, subtotal } = calculateOrderAmount(items);
+  const { total, subtotal } = await calculateOrderAmount(items);
 
   let intent = null;
 
