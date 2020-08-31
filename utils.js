@@ -101,7 +101,7 @@ const calculateOrderAmount = async (items) => {
   const query = await graphql.request(GET_PRODUCTS, { items: ids });
 
   console.log(query)
-  if (query.errors !== null) {
+  if (query.errors !== undefined) {
     console.log(query.errors)
     throw new Error("Failed to get references");
   }
