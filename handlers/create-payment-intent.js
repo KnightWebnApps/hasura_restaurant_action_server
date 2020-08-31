@@ -31,7 +31,7 @@ module.exports = createStripePaymentIntent = async (req, res) => {
   console.log(order)
 
   res.send({
-    client_secret: intent?.client_secret,
+    client_secret: intent.client_secret,
     id: order.id,
     total: order.total,
     subtotal: order.subtotal,
