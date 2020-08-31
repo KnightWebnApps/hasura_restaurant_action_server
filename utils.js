@@ -123,7 +123,7 @@ const calculateOrderAmount = async (items) => {
   //*   multiselectOption1 > Json where each id is an index to the option string
   //* }
   //*
-  let subTotal = 0;
+  let subtotal = 0;
 
   if (query.allProduct.length === items.length) {
     query.allProduct.forEach((p) => {
@@ -137,9 +137,9 @@ const calculateOrderAmount = async (items) => {
 
       //* Could be same item with different options ** handle multiple items
       if (eqItems.length > 1) {
-        eqItems.forEach((i) => (subTotal += p.price * i.quantity));
+        eqItems.forEach((i) => (subtotal += p.price * i.quantity));
       } else {
-        subTotal += p.price * eqItems[0].quantity;
+        subtotal += p.price * eqItems[0].quantity;
       }
     });
   } else {
