@@ -63,7 +63,9 @@ const createOrder = async (items, user_id, type, intent, subtotal, total) => {
       subtotal,
     });
 
-    if (!errors) {
+    console.log(data)
+
+    if (errors !== undefined) {
       console.log(errors);
       throw new Error("Failed to create order");
     }
@@ -81,7 +83,7 @@ const createOrder = async (items, user_id, type, intent, subtotal, total) => {
       subtotal,
     });
 
-    if (!errors) {
+    if (errors !== undefined) {
       console.log(errors);
       throw new Error("Failed to create order");
     }
