@@ -49,23 +49,46 @@ mutation ($intent_id: String, $user_id: uuid, $total: Int, $type: order_type_enu
 `;
 
 const createOrder = async (items, user_id, type, intent_id, subtotal, total) => {
-  const {
-    data: { insert_order_one },
-    errors,
-  } = await graphql.request(CREATE_ORDER, {
-    user_id,
-    type,
-    intent_id,
-    total,
-    items,
-    subtotal
-  });
-  
-  if(!errors){
-    console.log(errors)
-    throw new Error('Failed to create order')
+
+  if(intent_id === null){
+
+    const {
+      data: { insert_order_one },
+      errors,
+    } = await graphql.request(CREATE_ORDER, {
+      user_id,
+      type,
+      intent_id,
+      total,
+      items,
+      subtotal
+    });
+
+    if(!errors){
+      console.log(errors)
+      throw new Error('Failed to create order')
+    }
+    return { ...insert_order_one }
+
+  }else{
+    const {
+      data: { insert_order_one },
+      errors,
+    } = await graphql.request(CREATE_ORDER, {
+      user_id,
+      type,
+      intent_id = intent_id.client_secret,
+      total,
+      items,
+      subtotal,
+    });
+
+    if(!errors){
+      console.log(errors)
+      throw new Error('Failed to create order')
+    }
+    return { ...insert_order_one }
   }
-  return { ...insert_order_one }
 };
 
 const calculateOrderAmount = async (items) => {
