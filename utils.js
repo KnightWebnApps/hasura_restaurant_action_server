@@ -106,9 +106,9 @@ const calculateOrderAmount = async (items) => {
     throw new Error("Failed to get references");
   }
 
-  console.log(query.data.allProduct);
+  console.log(query.allProduct);
   // 2. Validate Products
-  if (query.data.allProduct.length === 0) {
+  if (query.allProduct.length === 0) {
     throw new Error("No Products");
   }
 
@@ -125,8 +125,8 @@ const calculateOrderAmount = async (items) => {
   //*
   let subTotal = 0;
 
-  if (query.data.allProduct.length === items.length) {
-    query.data.allProduct.forEach((p) => {
+  if (query.allProduct.length === items.length) {
+    query.allProduct.forEach((p) => {
       //! TODO validate that options are in fact a valid choice from CMS
       // compare each item to the equivalent product and be sure the option exists
       const eqItems = items.filter((i) => i.item_reference_id === p._id);
