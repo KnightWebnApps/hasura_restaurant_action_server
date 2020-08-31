@@ -124,7 +124,7 @@ const calculateOrderAmount = async (items) => {
   query.allProduct.forEach((p) => {
     //! TODO validate that options are in fact a valid choice from CMS
     // compare each item to the equivalent product and be sure the option exists
-    const eqItems = items.filter((i) => i.item_reference_id === p._id && i.price === p.price);
+    const eqItems = items.filter((i) => i.item_reference_id === p._id);
 
     if (eqItems === null || eqItems.length === 0) {
       throw new error("Invalid Item reference");
