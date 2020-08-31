@@ -15,4 +15,6 @@ app.post("/create-payment-intent", createStripePaymentIntent);
 
 
 // * Listen
-app.listen(4242, () => console.log('Node server listening on port 4242!'));
+app.listen({ port: process.env.PORT || 4000 }).then(({ url }) => {
+  console.log(`🚀 Server ready at ${url}`);
+});
