@@ -131,7 +131,7 @@ const calculateOrderAmount = async (items) => {
       // compare each item to the equivalent product and be sure the option exists
       const eqItems = items.filter((i) => i.item_reference_id === p._id);
 
-      if (!eqItem) {
+      if (eqItems === null || eqItems.length === 0) {
         throw new error("Invalid Item reference");
       }
 
