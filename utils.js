@@ -52,7 +52,7 @@ const createOrder = async (items, user_id, type, intent, subtotal, total) => {
 
   if (intent === null) {
     const {
-      data,
+      insert_order_one,
       errors,
     } = await graphql.request(CREATE_ORDER, {
       user_id,
@@ -63,13 +63,13 @@ const createOrder = async (items, user_id, type, intent, subtotal, total) => {
       subtotal,
     });
 
-    console.log(data)
+    console.log(insert_order_one);
 
     if (errors !== undefined) {
       console.log(errors);
       throw new Error("Failed to create order");
     }
-    return { ...data.insert_order_one };
+    return { ...insert_order_one };
   } else {
     const {
       data,
@@ -83,11 +83,13 @@ const createOrder = async (items, user_id, type, intent, subtotal, total) => {
       subtotal,
     });
 
+    console.log(insert_order_one);
+
     if (errors !== undefined) {
       console.log(errors);
       throw new Error("Failed to create order");
     }
-    return { ...data.insert_order_one };
+    return { ...insert_order_one };
   }
 };
 
