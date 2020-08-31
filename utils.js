@@ -139,7 +139,7 @@ const calculateOrderAmount = async (items) => {
       if (eqItems.length > 1) {
         eqItems.forEach((i) => (subTotal += p.price * i.quantity));
       } else {
-        subTotal += p.price * eqItem[0].quantity;
+        subTotal += p.price * eqItems[0].quantity;
       }
     });
   } else {
