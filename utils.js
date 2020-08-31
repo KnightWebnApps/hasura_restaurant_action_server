@@ -143,12 +143,12 @@ const calculateOrderAmount = async (items) => {
       }
     });
   } else {
-    const n = items.length - allProduct.length;
+    const n = items.length - query.allProduct.length;
     throw new Error(`ID mismatch for ${n} product(s)`);
   }
 
   // 3. Sum items and add tax
-  const tax = subtotal * allSettings[0].taxRate;
+  const tax = subtotal * query.allSettings[0].taxRate;
   const total = subtotal + tax;
 
   return { total, subtotal };
