@@ -48,46 +48,44 @@ mutation ($intent_id: String, $user_id: uuid, $total: Int, $type: order_type_enu
 }
 `;
 
-const createOrder = async (items, user_id, type, intent_id, subtotal, total) => {
+const createOrder = async (items, user_id, type, intent, subtotal, total) => {
 
-  if(intent_id === null){
-
+  if (intent === null) {
     const {
-      data: { insert_order_one },
+      data,
       errors,
     } = await graphql.request(CREATE_ORDER, {
       user_id,
       type,
-      intent_id,
-      total,
-      items,
-      subtotal
-    });
-
-    if(!errors){
-      console.log(errors)
-      throw new Error('Failed to create order')
-    }
-    return { ...insert_order_one }
-
-  }else{
-    const {
-      data: { insert_order_one },
-      errors,
-    } = await graphql.request(CREATE_ORDER, {
-      user_id,
-      type,
-      intent_id: intent_id.client_secret,
+      intent,
       total,
       items,
       subtotal,
     });
 
-    if(!errors){
-      console.log(errors)
-      throw new Error('Failed to create order')
+    if (!errors) {
+      console.log(errors);
+      throw new Error("Failed to create order");
     }
-    return { ...insert_order_one }
+    return { ...data.insert_order_one };
+  } else {
+    const {
+      data,
+      errors,
+    } = await graphql.request(CREATE_ORDER, {
+      user_id,
+      type,
+      intent_id: intent.id,
+      total,
+      items,
+      subtotal,
+    });
+
+    if (!errors) {
+      console.log(errors);
+      throw new Error("Failed to create order");
+    }
+    return { ...data.insert_order_one };
   }
 };
 
@@ -129,7 +127,7 @@ const calculateOrderAmount = async (items) => {
     query.allProduct.forEach((p) => {
       //! TODO validate that options are in fact a valid choice from CMS
       // compare each item to the equivalent product and be sure the option exists
-      const eqItems = items.filter((i) => i.item_reference_id === p._id);
+      const eqItems = items.filter((i) => i.item_reference_id === p._id && i.price === p.price);
 
       if (eqItems === null || eqItems.length === 0) {
         throw new error("Invalid Item reference");
