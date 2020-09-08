@@ -3,24 +3,18 @@ const { calculateOrderAmount, createOrder } = require('../utils');
 const stripe = require("stripe")(process.env.STRIPE_PRIVATE_KEY);
 
 module.exports = createStripePaymentIntent = async (req, res) => {
-  const { items, order_type, is_paying_now } = req.body.input;
+  const { items, order_type } = req.body.input;
 
   const user_id = req.body.session_variables["x-hasura-user-id"];
   // const role = req.body.session_variables["x-hasura-role"];
 
   // Create a PaymentIntent with the order amount and currency
   const { total, subtotal } = await calculateOrderAmount(items);
-
-  let intent = null;
-
-  if( is_paying_now ){
-    intent = await stripe.paymentIntents.create({
-      amount: total,
-      currency: "usd",
-    });
-  }
-
-  console.log(intent)
+  
+  const intent = await stripe.paymentIntents.create({
+    amount: total,
+    currency: "usd",
+  });
 
   const order = await createOrder(
     items,

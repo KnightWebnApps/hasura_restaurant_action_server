@@ -16,6 +16,9 @@ query($items: [ID!]){
     selectableOption1
     selectableOption2
     multiselectOption1   
+    categories{
+      title
+    }
   }
   allSettings{
     taxRate
