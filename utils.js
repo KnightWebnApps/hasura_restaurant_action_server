@@ -8,16 +8,29 @@ const graphql = new GraphQLClient(process.env.ENDPOINT, {
   },
 });
 
+
 const GET_PRODUCTS = `
-query($items: [ID!]){
+query($items: [ID!]){ 
   allProduct(where: { _id: {in: $items}}){
-    _id
     price
-    selectableOption1
-    selectableOption2
-    multiselectOption1   
-    categories{
+    singleOptions{
+      isRequired
       title
+      value
+      choices{
+        name
+        isSelected
+        price
+      }
+    }
+    multiOptions{
+      title
+      max
+      choices{
+        isSelected
+        name
+        price
+      }
     }
   }
   allSettings{
@@ -135,8 +148,34 @@ const calculateOrderAmount = async (items) => {
 
     //* Could be same item with different options ** handle multiple items
     if (eqItems.length > 1) {
-      eqItems.forEach((i) => (subtotal += p.price * i.quantity));
+      eqItems.forEach((i) => {
+        if (i.multiOptions !== null) {
+          i.multiOptions.forEach(opt => {
+            opt.choices.forEach(ch => ch.isSelected === true ? p.price += ch.price : null)
+          })
+        }
+
+        if (i.singleOptions !== null) {
+          i.singleOptions.forEach(opt => {
+            p.price += opt.value.price
+          })
+        }
+
+        subtotal += p.price * i.quantity
+      });
     } else {
+
+      if (eqItems[0].multiOptions !== null) {
+        eqItems[0].multiOptions.forEach(opt => {
+          opt.choices.forEach(ch => ch.isSelected === true ? p.price += ch.price : null)
+        })
+      }
+
+      if (eqItems[0].singleOptions !== null) {
+        eqItems[0].singleOptions.forEach(opt => {
+          p.price += opt.value.price
+        })
+      }
       subtotal += p.price * eqItems[0].quantity;
     }
   });
