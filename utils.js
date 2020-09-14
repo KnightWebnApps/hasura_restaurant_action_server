@@ -12,6 +12,7 @@ const graphql = new GraphQLClient(process.env.ENDPOINT, {
 const GET_PRODUCTS = `
 query($items: [ID!]){ 
   allProduct(where: { _id: {in: $items}}){
+    _id
     price
     singleOptions{
       isRequired
@@ -143,7 +144,7 @@ const calculateOrderAmount = async (items) => {
     const eqItems = items.filter((i) => i.item_reference_id === p._id);
 
     if (eqItems === null || eqItems.length === 0) {
-      throw new error("Invalid Item reference");
+      throw new Error("Invalid Item reference");
     }
 
     //* Could be same item with different options ** handle multiple items
