@@ -150,15 +150,13 @@ const calculateOrderAmount = async (items) => {
     //* Could be same item with different options ** handle multiple items
     if (eqItems.length > 1) {
       eqItems.forEach((i) => {
-        if (i.multiOptions !== null) {
-          i.multiOptions.forEach(opt => {
-            opt.choices.forEach(ch => ch.isSelected === true ? p.price += ch.price : null)
-          })
-        }
-
-        if (i.singleOptions !== null) {
-          i.singleOptions.forEach(opt => {
-            p.price += opt.value.price
+        if (i.options !== null) {
+          i.options.forEach(opt => {
+            if (opt.value !== undefined || opt.value !== null) {
+              p.price += opt.value.price
+            } else {
+              opt.choices.forEach(ch => ch.isSelected === true ? p.price += ch.price : null)
+            }
           })
         }
 
@@ -166,15 +164,13 @@ const calculateOrderAmount = async (items) => {
       });
     } else {
 
-      if (eqItems[0].multiOptions !== null) {
-        eqItems[0].multiOptions.forEach(opt => {
-          opt.choices.forEach(ch => ch.isSelected === true ? p.price += ch.price : null)
-        })
-      }
-
-      if (eqItems[0].singleOptions !== null) {
-        eqItems[0].singleOptions.forEach(opt => {
-          p.price += opt.value.price
+      if (eqItems[0].options !== null) {
+        eqItems[0].options.forEach(opt => {
+          if (opt.value !== undefined || opt.value !== null) {
+            p.price += opt.value.price
+          } else {
+            opt.choices.forEach(ch => ch.isSelected === true ? p.price += ch.price : null)
+          }
         })
       }
       subtotal += p.price * eqItems[0].quantity;
