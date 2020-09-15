@@ -92,7 +92,7 @@ const adjustRewardPoints = async (subtotal, user_id) => {
     throw new Error('Failed To get user points')
   }
 
-  const oldPoints = pointsQuery.user[0].reward_points;
+  const oldPoints = pointsQuery.user_by_pk.reward_points;
 
   const newPoints = (subtotal * .01).toFixed(0);
 
