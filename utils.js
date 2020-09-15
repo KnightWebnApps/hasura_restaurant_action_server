@@ -45,6 +45,25 @@ query($items: [ID!]){
 }
 `;
 
+const REWARD_POINTS = `
+  query($id: uuid!){
+    user_by_pk(id: $id){
+      reward_points
+    }
+  }
+`;
+
+const UPDATE_POINTS = `
+mutation($points: Int, $id: uuid!){
+	update_user_by_pk(
+    pk_columns: {id: $id}
+    _set: {reward_points: $points}
+  ){
+    reward_points
+    
+  }
+}`;
+
 const CREATE_ORDER = `
 mutation ($intent_id: String, $user_id: uuid, $total: Int, $type: order_type_enum, $items: [order_item_insert_input!]!, $subtotal: Int) {
   insert_order_one(object: {
@@ -65,6 +84,23 @@ mutation ($intent_id: String, $user_id: uuid, $total: Int, $type: order_type_enu
 }
 `;
 
+const adjustRewardPoints = async (subtotal, user_id) => {
+  const pointsQuery = await graphql.request(REWARD_POINTS, { id: user_id});
+
+  if(pointsQuery.errors !== undefined){
+    console.log(pointsQuery.errors)
+    throw new Error('Failed To get user points')
+  }
+
+  const oldPoints = pointsQuery.user[0].reward_points;
+
+  const newPoints = (subtotal * .01).toFixed(0);
+
+  const points = oldPoints + newPoints;
+
+  return await graphql.request(UPDATE_POINTS, { id: user_id, points });
+}
+
 const createOrder = async (items, user_id, type, intent, subtotal, total) => {
 
   if (intent === null) {
@@ -77,12 +113,11 @@ const createOrder = async (items, user_id, type, intent, subtotal, total) => {
       subtotal,
     });
 
-    console.log(orderQuery.insert_order_one);
-
     if (orderQuery.errors !== undefined) {
       console.log(orderQuery.errors);
       throw new Error("Failed to create order");
     }
+
     return { ...orderQuery.insert_order_one };
   } else {
     const orderQuery = await graphql.request(CREATE_ORDER, {
@@ -92,9 +127,7 @@ const createOrder = async (items, user_id, type, intent, subtotal, total) => {
       total,
       items,
       subtotal,
-    });
-
-    console.log(orderQuery.insert_order_one);
+    }); 
 
     if (orderQuery.errors !== undefined) {
       console.log(orderQuery.errors);
@@ -105,7 +138,7 @@ const createOrder = async (items, user_id, type, intent, subtotal, total) => {
 };
 
 const calculateOrderAmount = async (items) => {
-  console.log(items);
+
 
   const ids = [];
   items.forEach((i) => ids.push(i.item_reference_id));
@@ -113,40 +146,28 @@ const calculateOrderAmount = async (items) => {
   // 1. Get all cart products
   const query = await graphql.request(GET_PRODUCTS, { items: ids });
 
-  console.log(query)
   if (query.errors !== undefined) {
     console.log(query.errors)
     throw new Error("Failed to get references");
   }
 
-  console.log(query.allProduct);
   // 2. Validate Products
   if (query.allProduct.length === 0) {
     throw new Error("No Products");
   }
 
-  //* product options will be null if none are available
-  //* item object
-  //* {
-  //*   name: <Product Name>,
-  //*   item_reference_id: <Product ID>,
-  //*   quantity,
-  //*   selectableOption1,
-  //*   selectableOption2,
-  //*   multiselectOption1 > Json where each id is an index to the option string
-  //* }
-  //*
   let subtotal = 0;
 
   query.allProduct.forEach((p) => {
-    //! TODO validate that options are in fact a valid choice from CMS
-    // compare each item to the equivalent product and be sure the option exists
-    const eqItems = items.filter((i) => i.item_reference_id === p._id);
 
+    const eqItems = items.filter((i) => i.item_reference_id === p._id);
+    
     if (eqItems === null || eqItems.length === 0) {
       throw new Error("Invalid Item reference");
     }
-
+    
+    //! TODO compare each item to the equivalent product and be sure the option exists
+    
     //* Could be same item with different options ** handle multiple items
     if (eqItems.length > 1) {
       eqItems.forEach((i) => {
@@ -184,4 +205,4 @@ const calculateOrderAmount = async (items) => {
   return { total, subtotal };
 };
 
-module.exports = { calculateOrderAmount, createOrder };
+module.exports = { calculateOrderAmount, createOrder, adjustRewardPoints };

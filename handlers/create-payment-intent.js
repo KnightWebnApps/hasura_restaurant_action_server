@@ -1,4 +1,4 @@
-const { calculateOrderAmount, createOrder } = require('../utils');
+const { calculateOrderAmount, createOrder, adjustRewardPoints } = require('../utils');
 
 const stripe = require("stripe")(process.env.STRIPE_PRIVATE_KEY);
 
@@ -10,11 +10,18 @@ module.exports = createStripePaymentIntent = async (req, res) => {
 
   // Create a PaymentIntent with the order amount and currency
   const { total, subtotal } = await calculateOrderAmount(items);
-  
-  const intent = await stripe.paymentIntents.create({
-    amount: total,
-    currency: "usd",
-  });
+  let intent
+  try {
+    
+    intent = await stripe.paymentIntents.create({
+      amount: total,
+      currency: "usd",
+    });
+
+  } catch (error) {
+    console.log(error)
+    res.status(500).send({message: "Failed to create payment"})
+  }
 
   const order = await createOrder(
     items,
@@ -25,6 +32,8 @@ module.exports = createStripePaymentIntent = async (req, res) => {
     total,
   );
   console.log(order)
+
+  await adjustRewardPoints(order.subtotal, user_id)
 
   res.send({
     clientSecret: intent.client_secret,
