@@ -14,6 +14,7 @@ module.exports = getPayment = async (req, res) => {
       canceled_at: paymentIntent.canceled_at,
       client_secret: paymentIntent.client_secret,
       receipt_email: paymentIntent.receipt_email,
+      status: paymentIntent.status
     });
 
   }catch(e){
