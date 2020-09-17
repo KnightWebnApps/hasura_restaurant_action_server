@@ -2,7 +2,7 @@ const bcrypt = require("bcryptjs")
 const { createNewDevice } = require('../utils')
 
 
-module.exports = createStripePaymentIntent = async (req, res) => {
+module.exports = createDevice = async (req, res) => {
   const { email, password } = req.body.input;
 
   const hashedPassword = await bcrypt.hash(password, 10);
