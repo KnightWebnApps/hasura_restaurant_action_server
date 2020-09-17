@@ -84,6 +84,36 @@ mutation ($intent_id: String, $user_id: uuid, $total: Int, $type: order_type_enu
 }
 `;
 
+const DEVICESIGNUP = `
+  mutation($email: String, $password: String){
+    insert_device(objects:{
+      email: $email
+      password: $password
+    }){
+      returning{
+        id
+      }
+    }
+  }
+`;
+
+const createNewDevice = async (email, password) => {
+
+  try {
+    
+    const device = await graphql.request(DEVICESIGNUP, { email, password }).then( data => {
+      return data.insert_device.returning[0]
+    })
+  
+    return device.id
+
+  } catch (error) {
+    console.log(error)
+    throw new Error("Failed to create device")
+  }
+
+}
+
 const adjustRewardPoints = async (subtotal, user_id) => {
   const pointsQuery = await graphql.request(REWARD_POINTS, { id: user_id});
 
@@ -205,4 +235,4 @@ const calculateOrderAmount = async (items) => {
   return { total, subtotal };
 };
 
-module.exports = { calculateOrderAmount, createOrder, adjustRewardPoints };
+module.exports = { calculateOrderAmount, createOrder, adjustRewardPoints, createNewDevice };
