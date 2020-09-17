@@ -16,6 +16,7 @@ module.exports = createStripePaymentIntent = async (req, res) => {
     intent = await stripe.paymentIntents.create({
       amount: total,
       currency: "usd",
+      confirm: true
     });
 
   } catch (error) {
