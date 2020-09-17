@@ -66,9 +66,10 @@ mutation($points: Int, $id: uuid!){
 }`;
 
 const CREATE_ORDER = `
-mutation ($intent_id: String, $user_id: uuid, $total: Int, $type: order_type_enum, $items: [order_item_insert_input!]!, $subtotal: Int) {
+mutation ($intent: String, $payment: jsonb, $user_id: uuid, $total: Int, $type: order_type_enum, $items: [order_item_insert_input!]!, $subtotal: Int) {
   insert_order_one(object: {
-    intent_id: $intent_id, 
+    intent_id: $intent
+    payment: $payment, 
     user_id: $user_id, 
     total: $total, 
     type: $type, 
@@ -76,7 +77,7 @@ mutation ($intent_id: String, $user_id: uuid, $total: Int, $type: order_type_enu
     subtotal: $subtotal}
   ) {
     id
-    intent_id,
+    payment
     order_num,
     type,
     total,
@@ -134,26 +135,11 @@ const adjustRewardPoints = async (subtotal, user_id) => {
 
 const createOrder = async (items, user_id, type, intent, subtotal, total) => {
 
-  if (intent === null) {
+  
     const orderQuery = await graphql.request(CREATE_ORDER, {
       user_id,
       type,
-      intent,
-      total,
-      items,
-      subtotal,
-    });
-
-    if (orderQuery.errors !== undefined) {
-      console.log(orderQuery.errors);
-      throw new Error("Failed to create order");
-    }
-
-    return { ...orderQuery.insert_order_one };
-  } else {
-    const orderQuery = await graphql.request(CREATE_ORDER, {
-      user_id,
-      type,
+      payment: intent,
       intent_id: intent.id,
       total,
       items,
@@ -164,8 +150,9 @@ const createOrder = async (items, user_id, type, intent, subtotal, total) => {
       console.log(orderQuery.errors);
       throw new Error("Failed to create order");
     }
+
     return { ...orderQuery.insert_order_one };
-  }
+  
 };
 
 const calculateOrderAmount = async (items) => {
