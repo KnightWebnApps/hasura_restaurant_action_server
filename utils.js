@@ -4,6 +4,7 @@ require("dotenv").config();
 
 const graphql = new GraphQLClient(process.env.ENDPOINT, {
   headers: {
+    "content-type": 'application/json',
     "X-Hasura-Admin-Secret": process.env.HASURA_ADMIN_SECRET,
   },
 });
