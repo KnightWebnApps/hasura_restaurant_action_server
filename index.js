@@ -13,7 +13,7 @@ app.use(express.json());
 
 // * Handlers
 app.post("/create-payment-intent", createStripePaymentIntent);
-app.post("create-device", createDevice);
+app.post("/create-device", createDevice);
 
 // * Listen
 app.listen({ port: process.env.PORT || 4000 }, () => console.log(`🚀 Server ready at ${process.env.PORT}`) );
