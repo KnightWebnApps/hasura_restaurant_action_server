@@ -141,7 +141,7 @@ const createOrder = async (items, user_id, type, intent, subtotal, total) => {
       user_id,
       type,
       payment: intent,
-      intent_id: intent.id,
+      intent: intent.id,
       total,
       items,
       subtotal,
