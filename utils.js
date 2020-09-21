@@ -81,7 +81,8 @@ mutation ($intent: String, $payment: jsonb, $user_id: uuid, $total: Int, $type: 
     order_num,
     type,
     total,
-    subtotal
+    subtotal,
+    intent_id
   }
 }
 `;
@@ -117,7 +118,7 @@ const createNewDevice = async (email, password) => {
 }
 
 const adjustRewardPoints = async (subtotal, user_id) => {
-  const pointsQuery = await graphql.request(REWARD_POINTS, { id: user_id});
+  const pointsQuery = await graphql.request(REWARD_POINTS, { id: user_id });
 
   if(pointsQuery.errors !== undefined){
     console.log(pointsQuery.errors)
