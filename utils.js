@@ -206,10 +206,10 @@ const calculateOrderAmount = async (items) => {
 
       if (eqItems[0].options !== null) {
         eqItems[0].options.forEach(opt => {
-          if (opt.value !== undefined || opt.value !== null) {
-            p.price += opt.value.price
-          } else {
+          if (opt.value === undefined) {
             opt.choices.forEach(ch => ch.isSelected === true ? p.price += ch.price : null)
+          } else {
+            p.price += opt.value.price
           }
         })
       }
