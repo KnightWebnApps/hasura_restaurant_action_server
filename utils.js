@@ -104,11 +104,12 @@ const DEVICESIGNUP = `
 `;
 
 const INSERT_FEEDBACK = `
-  mutation($orderId: uuid, $comment: String, $rating: Int){
+  mutation($orderId: uuid, $comment: String, $rating: Int, $sentiment: float8){
     insert_feedback_one(object: {
       comment: $comment
       rating: $rating
       order_id: $orderId
+      sentiment_score: $sentiment
     }){
       id
     }
@@ -207,9 +208,7 @@ const createFeedback = async (comment, rating, orderId) => {
 
     const sentiment = await runSentimentAnalysis(comment);
 
-    console.log(`Sentiment Score: ${sentiment}`)
-
-    const feedback = await graphql.request(INSERT_FEEDBACK, { comment, rating, orderId }).then( data => {
+    const feedback = await graphql.request(INSERT_FEEDBACK, { comment, rating, orderId, sentiment }).then( data => {
       return data.insert_feedback_one
     })
 
