@@ -127,9 +127,7 @@ const adjustRewardPoints = async (subtotal, user_id) => {
 
   const oldPoints = pointsQuery.user_by_pk.reward_points;
 
-  const newPoints = (subtotal * .01).toFixed(0);
-
-  const points = oldPoints + newPoints;
+  const points = oldPoints + 10;
 
   return await graphql.request(UPDATE_POINTS, { id: user_id, points });
 }
