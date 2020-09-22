@@ -133,7 +133,7 @@ const createFeedback = async (comment, rating, orderId) => {
     }
 
     const feedback = await graphql.request(INSERT_FEEDBACK, { comment, rating, orderId }).then( data => {
-      return data.insert_feedback
+      return data.insert_feedback_one
     })
 
     return feedback.id
