@@ -100,6 +100,33 @@ const DEVICESIGNUP = `
   }
 `;
 
+const INSERT_FEEDBACK = `
+  mutation($orderId: uuid, $comment: String, $rating: Int){
+    insert_feedback_one(object: {
+      comment: $comment
+      rating: $rating
+      order_id: $orderId
+    }){
+      id
+    }
+  }
+`;
+
+const createFeedback = async (comment, rating, orderId) => {
+  try {
+    const feedback = await graphql.request(INSERT_FEEDBACK, { comment, rating, orderId }).then( data => {
+      return data.insert_feedback
+    })
+
+    return feedback.id
+
+  } catch (error) {
+    console.error(error)
+    throw new Error("Failed to create Feedback")
+  }
+}
+
+
 const createNewDevice = async (email, password) => {
 
   try {
@@ -222,4 +249,4 @@ const calculateOrderAmount = async (items) => {
   return { total, subtotal };
 };
 
-module.exports = { calculateOrderAmount, createOrder, adjustRewardPoints, createNewDevice };
+module.exports = { calculateOrderAmount, createOrder, adjustRewardPoints, createNewDevice, createFeedback };
