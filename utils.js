@@ -205,10 +205,10 @@ const createFeedback = async (comment, rating, orderId) => {
       throw new Error('Feedback is accepted within 24hrs of order')
     }
 
-    const sentiment = runSentimentAnalysis(comment);
+    const sentiment = await runSentimentAnalysis(comment);
 
     console.log(`Sentiment Score: ${sentiment}`)
-    
+
     const feedback = await graphql.request(INSERT_FEEDBACK, { comment, rating, orderId }).then( data => {
       return data.insert_feedback_one
     })
