@@ -122,6 +122,16 @@ const GET_ORDER_BY_PK = `
   }
 `;
 
+const UPDATE_ORDER_FEEDBACK = `
+  mutation($id: uuid!, $feedbackId: uuid!){
+    update_order_by_pk(pk_columns: {id: $id}, _set: {
+      feedback_id: $feedbackId
+    }){
+      id
+    }
+  }
+`;
+
 const createFeedback = async (comment, rating, orderId) => {
   try {
     const order = await graphql.request(GET_ORDER_BY_PK, { id: orderId }).then( data => data.order_by_pk);
@@ -135,6 +145,8 @@ const createFeedback = async (comment, rating, orderId) => {
     const feedback = await graphql.request(INSERT_FEEDBACK, { comment, rating, orderId }).then( data => {
       return data.insert_feedback_one
     })
+
+    await graphql.request(UPDATE_ORDER_FEEDBACK, { id: orderId, feedbackId: feedback.id})
 
     return feedback.id
 
