@@ -1,5 +1,5 @@
 const { GraphQLClient } = require("graphql-request");
-
+const moment = require('moment')
 require("dotenv").config();
 
 const graphql = new GraphQLClient(process.env.ENDPOINT, {
@@ -112,8 +112,26 @@ const INSERT_FEEDBACK = `
   }
 `;
 
+const GET_ORDER_BY_PK = `
+  query($id: uuid!){
+    order_by_pk(id: $id){
+      created_at
+      completed_at
+      feedback_id
+    }
+  }
+`;
+
 const createFeedback = async (comment, rating, orderId) => {
   try {
+    const order = await graphql.request(GET_ORDER_BY_PK, { id: orderId }).then( data => data.order_by_pk);
+
+    const isWithin24Hours = moment(order.created_at).add(1, 'd').isAfter(moment());
+
+    if(isWithin24Hours === false){
+      throw new Error('Feedback is accepted within 24hrs of order')
+    }
+
     const feedback = await graphql.request(INSERT_FEEDBACK, { comment, rating, orderId }).then( data => {
       return data.insert_feedback
     })
