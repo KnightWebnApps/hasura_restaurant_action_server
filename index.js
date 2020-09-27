@@ -8,6 +8,8 @@ const createStripePaymentIntent = require('./handlers/create-payment-intent');
 const createDevice = require('./handlers/create-device');
 const getPayment = require("./handlers/get-payment");
 const createFeedback = require("./handlers/create-feedback");
+const createCheckout = require('./handlers/start-checkout')
+const completeCheckout = require('./handlers/finish-checkout')
 
 app.use(express.static("."));
 
@@ -18,6 +20,8 @@ app.post("/create-payment-intent", createStripePaymentIntent);
 app.post("/create-device", createDevice);
 app.post("/get-payment", getPayment);
 app.post("/create-feedback", createFeedback);
+app.post('/create-checkout', createCheckout)
+app.post('/complete-checkout', completeCheckout)
 
 // * Listen
 app.listen({ port: process.env.PORT || 4000 }, () => console.log(`🚀 Server ready at ${process.env.PORT}`) );

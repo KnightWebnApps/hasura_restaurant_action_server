@@ -1,7 +1,7 @@
 const { updateOrder } = require('../helpers/orderHelpers');
 const { completeRewardRedemption, addRewardPoints } = require('../helpers/rewardHelpers')
 
-module.exports = startCheckout = async (req, res) => {
+module.exports = completeCheckout = async (req, res) => {
   const { payment, orderId } = req.body.input;
 
   const user_id = req.body.session_variables["x-hasura-user-id"];
