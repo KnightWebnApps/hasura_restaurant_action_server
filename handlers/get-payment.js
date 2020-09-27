@@ -19,7 +19,7 @@ module.exports = getPayment = async (req, res) => {
 
   }catch(e){
     console.error(e)
-    res.status(500).send({message: e})
+    res.status(400).send({message: e})
   }
 
 }

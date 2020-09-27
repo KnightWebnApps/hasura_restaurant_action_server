@@ -1,4 +1,4 @@
-const { createFeedback } = require('../utils')
+const { createFeedback } = require('../helpers/feedbackHelpers')
 
 module.exports = createDevice = async (req, res) => {
   const { comment, rating, orderId } = req.body.input;
@@ -10,7 +10,7 @@ module.exports = createDevice = async (req, res) => {
       id: feedbackId
     })
   } catch (error) {
-    return res.status(500).send({
+    return res.status(400).send({
       message: error
     })
   }

@@ -15,7 +15,7 @@ module.exports = createDevice = async (req, res) => {
       deviceId
     });
   } catch (error) {
-    return res.status(500).send({message: error})
+    return res.status(400).send({message: error})
   }
 
 }
