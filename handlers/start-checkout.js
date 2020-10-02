@@ -7,7 +7,7 @@ module.exports = startCheckout = async (req, res) => {
   const { items, orderType, rewardId } = req.body.input;
 
   const user_id = req.body.session_variables["x-hasura-user-id"];
-
+  console.log(rewardId)
   if(rewardId === null){
     const { total, subtotal } = await calculateOrderAmount(items)
     const rewardRedemptionId = null;
@@ -22,7 +22,7 @@ module.exports = startCheckout = async (req, res) => {
       id: order.id,
       subtotal: order.subtotal,
       total: order.total,
-      clientSecret: intent.clientSecret,
+      clientSecret: intent.client_secret,
       intent_id: intent.id
     })
 
@@ -46,7 +46,7 @@ module.exports = startCheckout = async (req, res) => {
         id: order.id,
         subtotal: order.subtotal,
         total: order.total,
-        clientSecret: intent.clientSecret,
+        clientSecret: intent.client_secret,
         intent_id: intent.id
       })
       
