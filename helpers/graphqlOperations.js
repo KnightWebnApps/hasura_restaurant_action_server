@@ -86,6 +86,7 @@ mutation ($rewardId: uuid, $intent: String, $payment: jsonb, $user_id: uuid, $to
     type: $type, 
     reward_id: $rewardId
     order_items: {data: $items}, 
+    state_enum: CREATED
     subtotal: $subtotal}
   ) {
     id
@@ -104,12 +105,12 @@ mutation($id: uuid!, $payment: jsonb){
   update_order_by_pk(
     pk_columns:{id:$id}
     _set: {
-      is_completed: true
+      state_enum: INITIATED
       payment: $payment
     }
   ){
     id
-    is_completed
+    state_enum
     reward_redemption {
       reward_id
     }

@@ -8,7 +8,7 @@ module.exports = completeCheckout = async (req, res) => {
 
   try {
     
-    const { id, is_completed, reward_redemption } = await updateOrder(payment, orderId)
+    const { id, state_enum, reward_redemption } = await updateOrder(payment, orderId)
 
     if(reward_redemption !== null){
       await completeRewardRedemption(reward_redemption.reward_id, user_id)
@@ -18,7 +18,7 @@ module.exports = completeCheckout = async (req, res) => {
 
     res.status(200).send({
       id,
-      is_completed
+      state_enum
     })
 
   } catch (error) {
