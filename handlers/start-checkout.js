@@ -32,7 +32,7 @@ module.exports = startCheckout = async (req, res) => {
       const reward = await validateReward(rewardId, user_id)
       const { discountAmount, rewardRedemptionId } = await calculateRewardDiscount(items, reward, subtotal, user_id);
 
-      const finalSubtotal = subtotal - discountAmount ;
+      let finalSubtotal = subtotal - discountAmount ;
       const finalTotal = finalSubtotal += finalSubtotal * .08
 
       const intent = await stripe.paymentIntents.create({
