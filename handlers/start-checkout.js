@@ -36,7 +36,7 @@ module.exports = startCheckout = async (req, res) => {
       const finalTotal = finalSubtotal += finalSubtotal * .08
 
       const intent = await stripe.paymentIntents.create({
-        total: finalTotal,
+        amount: finalTotal,
         currency: 'usd'
       })
 
