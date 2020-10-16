@@ -11,6 +11,8 @@ const createFeedback = require("./handlers/create-feedback");
 const createCheckout = require("./handlers/start-checkout");
 const completeCheckout = require("./handlers/finish-checkout");
 const cancelOrder = require("./handlers/cancel-order");
+const refundOrder = require("./handlers/refund-order");
+const refundOrderAmount = require('./handlers/refund-order-amount');
 
 app.use(express.static("."));
 
@@ -24,6 +26,8 @@ app.post("/create-feedback", createFeedback);
 app.post("/create-checkout", createCheckout);
 app.post("/complete-checkout", completeCheckout);
 app.post("/cancel-order", cancelOrder);
+app.post("/refund-order", refundOrder);
+app.post("/refund-order-amount", refundOrderAmount);
 
 // * Listen
 app.listen({ port: process.env.PORT || 4000 }, () =>

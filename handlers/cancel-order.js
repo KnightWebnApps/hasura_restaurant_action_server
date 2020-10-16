@@ -39,6 +39,6 @@ module.exports = cancelStripePaymentIntent = async (req, res) => {
   } catch (error) {
     
     console.error(error)
-    res.send({ message: "Cancel Failed" })
+    res.status(400).send({ message: error })
   }
 }

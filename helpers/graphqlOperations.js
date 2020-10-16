@@ -191,6 +191,19 @@ const CREATE_REWARD_REDEMPT = `
   }
 `;
 
+const UPDATE_ORDER_WITH_REFUND = `
+mutation($id: uuid!, $refundId: String){
+  update_order_by_pk(pk_columns: {id: $id}
+  	_set: {
+      refund_id: $refundId
+      state_enum: REFUNDED
+    }
+  ){
+    id
+  }
+}
+`;
+
 module.exports = {
   CREATE_REWARD_REDEMPT,
   UPDATE_ORDER_FEEDBACK,
@@ -205,4 +218,5 @@ module.exports = {
   INSERT_FEEDBACK,
   DEVICESIGNUP,
   CANCEL_ORDER,
+  UPDATE_ORDER_WITH_REFUND,
 };
