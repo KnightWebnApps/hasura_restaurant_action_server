@@ -150,6 +150,7 @@ const GET_ORDER_BY_PK = `
       created_at
       completed_at
       feedback_id
+      intent_id
     }
   }
 `;
@@ -162,6 +163,18 @@ const UPDATE_ORDER_FEEDBACK = `
       id
     }
   }
+`;
+
+const CANCEL_ORDER = `
+  mutation($id: uuid!, $payment: jsonb){
+  update_order_by_pk(pk_columns: {id: $id} _set: {
+    state_enum : CANCELLED
+    payment: $payment
+  }){
+    id
+		state_enum
+  }
+}
 `;
 
 const CREATE_REWARD_REDEMPT = `
@@ -186,9 +199,10 @@ module.exports = {
   GET_PRODUCT,
   REWARD_POINTS,
   GET_REWARDS_BY_PK,
-  UPDATE_POINTS, 
+  UPDATE_POINTS,
   CREATE_ORDER,
   UPDATE_ORDER,
   INSERT_FEEDBACK,
-  DEVICESIGNUP
+  DEVICESIGNUP,
+  CANCEL_ORDER,
 };
