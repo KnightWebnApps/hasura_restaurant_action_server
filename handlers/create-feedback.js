@@ -1,6 +1,6 @@
 const { createFeedback } = require('../helpers/feedbackHelpers')
 
-module.exports = createDevice = async (req, res) => {
+module.exports = createFeedback = async (req, res) => {
   const { comment, rating, orderId } = req.body.input;
 
   try {
